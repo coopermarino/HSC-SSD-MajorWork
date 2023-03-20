@@ -1,0 +1,164 @@
+body {
+	background-color: #323232;
+	color: #fff;
+	font-family: Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	height: 100vh;
+	text-align: center;
+	opacity: .95;
+	width: calc(100% / 3); /* Set the width to one-third of the page */
+	transform: translateX(50vw); /* Move the element to the right by two-thirds of the page */
+}
+
+form {
+	background-color: #323232;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	max-width: 400px;
+	padding: 20px;
+	width: 100%;
+}
+
+.logo {
+	display: block;
+	margin: auto;
+	max-width: 100%;
+	padding-bottom: 20px;
+}
+
+h1 {
+	color: #b89c60;
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin: 0 0 30px;
+	text-align: center;
+
+}
+
+label {
+	display: block;
+	margin-bottom: 10px;
+	color: #515250;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+	border: 1px solid #95835a;
+	border-radius: 3px;
+	font-size: 16px;
+	margin-bottom: 20px;
+	padding: 10px;
+	width: 90%;
+}
+
+input[type="submit"] {
+	background-color: #736a55;
+	border: none;
+	border-radius: 3px;
+	color: #fff;
+	cursor: pointer;
+	font-size: 16px;
+	padding: 10px;
+	width: 95%;
+	font-weight: bold;
+	text-decoration: underline;
+	transition: background 0.2s linear;
+}
+
+input[type="submit"]:hover {
+	background-color: #515250;
+}
+span[type="register"]{
+	text-align: center;
+	color:#fff;
+}
+
+.register-btn {
+	color: #fff;
+	font-weight: bold;
+	transition: color 0.2s linear;
+}
+
+.register-btn:hover {
+	color: #e3d3ab;
+}
+
+.alert {
+	padding: 20px;
+	background-color: #f44336;
+	opacity: .95;
+	border-radius: 0.7rem;
+	color: white;
+	animation: fadeIn 2s;
+}
+
+.closebtn {
+	margin-left: 15px;
+	color: white;
+	font-weight: bold;
+	float: right;
+	font-size: 22px;
+	line-height: 20px;
+	cursor: pointer;
+	transition: 0.3s;
+	background: none;
+	border: none;
+  }
+  
+  .closebtn:hover {
+	color: black;
+  }
+
+@media only screen and (max-width: 768px) {
+	.container {
+		padding: 20px;
+		transform: none;
+		margin: auto;
+		width: 100vw;
+	}
+
+	form {
+		max-width: none;
+	}
+
+	input[type="text"],
+	input[type="password"],
+	input[type="email"],
+	input[type="submit"],
+	.register-btn {
+		font-size: 14px;
+		padding: 8px;
+	}
+
+	h1 {
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+
+	label {
+		font-size: 14px;
+	}
+
+	input[type="submit"]:hover,
+	.register-btn:hover {
+		background-color: #95835a;
+	}
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
+  }
+
+
