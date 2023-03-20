@@ -46,7 +46,7 @@
             "added" : "'.$added.'",
             "profilePic": "'.$row['profilePic'].'"
           }';
-    
+    // Note Need to create a UID for the button to prevent SQL Injections
     $conn = mysqli_connect("db", "root", "root", "SocialNetwork");
     $query = "INSERT INTO `pendingRequests` (`userSent`, `userRecieve`) VALUES ($userID, $assoCode) ON DUPLICATE KEY UPDATE `userSent` = `userSent`";
     $result = mysqli_query($conn, $query);
