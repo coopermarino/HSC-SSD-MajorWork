@@ -166,8 +166,8 @@
                       <h2 class="Card-Title">'.$userSent.'</h2>
                     </div>
                     <div class="friendcontrols">
-                      <button class="accept-friend dark:friendcard" href="#">Accept</button>
-                      <button class="deny-friend dark:friendcard" href="#">Deny</button>
+                    <button class="accept-friend dark:friendcard" id="confirm_friend" uid="'.$row['buttonUID'].'">Accept</button>
+                    <button class="deny-friend dark:friendcard" id="deny_friend" uid="'.$row['buttonUID'].'">Deny</button>
                     </div>
                   </div>';
             
@@ -188,3 +188,38 @@
   
 </body>
 </html>
+<script>
+  function logConfirmation() {
+  const confirmBtn = document.getElementById("confirm_friend");
+  const uid = confirmBtn.getAttribute("uid");
+  console.log("Confirm button clicked. UID:", uid);
+
+  const url = `confirm.php?confirm=${uid}`;
+  fetch(url, { method: "POST" })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then(responseText => {
+      console.log("Confirmation response:", responseText);
+    })
+    .catch(error => {
+      console.error("Error confirming friend:", error);
+    });
+}
+
+document.getElementById("confirm_friend").addEventListener("click", logConfirmation);
+
+
+function logDenial() {
+  const denyBtn = document.getElementById("deny_friend");
+  const uid = denyBtn.getAttribute("uid");
+  console.log("Deny button clicked. UID:", uid);
+}
+
+document.getElementById("deny_friend").addEventListener("click", logDenial);
+
+
+</script>

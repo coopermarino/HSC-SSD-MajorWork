@@ -1366,6 +1366,7 @@ video {
 
 .accept-friend,.deny-friend{
 	flex: 1 1 auto;
+	text-align: center;
 	text-decoration:none;
 	width: 100px;
 	padding: 10px;
