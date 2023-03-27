@@ -4,10 +4,6 @@
 if (isset($_GET['confirm'])) {
   $uid = $_GET['confirm'];
 
-  // TODO: Perform whatever actions are necessary to confirm the friend
-  // with the given UID. For example, you might update a database record
-  // or send a notification to the user who made the friend request.
-
   // Connect to the database
   $host = "db";
   $username = "root";
@@ -30,13 +26,42 @@ if (isset($_GET['confirm'])) {
   $userSent = $row['userSent'];
   $userRecieve = $row['userRecieve'];
 
+  // Delete the pending request from the pendingRequests table
+  $deleteQuery = "DELETE FROM pendingRequests WHERE buttonUID='$uid'";
+  $deleteResult = mysqli_query($conn, $deleteQuery);
+  if (!$deleteResult) {
+    die("Error deleting pending request: " . mysqli_error($conn));
+  }
+
+
+  mysqli_close($conn);
+
   // Send a confirmation response with the userSent and userReceive values
   echo "Confirmed friend with UID: $uid";
-  echo "User sent: $userSent";
-  echo "User receive: $userRecieve";
 
   // Add User SQL
 
+  $host = "db";
+  $username = "root";
+  $password = "root";
+  $dbname = "Friends";
+  $conn = mysqli_connect($host, $username, $password, $dbname);
+  if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+  }
+
+
+  $insertQuerySent = "INSERT INTO `$userSent` (FriendID) VALUES ('$userRecieve')";
+  $insertQueryRecieve = "INSERT INTO `$userRecieve` (FriendID) VALUES ('$userSent')";
+  echo $insertQueryRecieve;
+  $insertResult = mysqli_query($conn, $insertQuerySent);
+  $insertResult = mysqli_query($conn, $insertQueryRecieve);
+  if (!$insertResult) {
+    die("Error inserting friend into Friends table: " . mysqli_error($conn));
+  }
+
+  // Close the database connection
+  mysqli_close($conn);
 
   // Close the database connection
   mysqli_close($conn);

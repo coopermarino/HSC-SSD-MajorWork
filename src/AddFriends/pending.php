@@ -29,7 +29,6 @@
           <svg viewBox="0 0 24 24" class="h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            <circle cx="20" cy="3" r="3" fill="red" stroke="none"/>
           </svg>
         </button>
       </a>
@@ -38,7 +37,6 @@
         <button class="h-10 w-12 dark:text-gray-500 rounded-md flex items-center justify-center">
           <svg viewBox="0 0 24 24" class="h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-            <circle cx="20" cy="3" r="3" fill="red" stroke="none"/>
           </svg>
         </button>
       </a>
@@ -50,7 +48,12 @@
           <circle xmlns="http://www.w3.org/2000/svg" cx="8.5" cy="7" r="4"/>
           <line xmlns="http://www.w3.org/2000/svg" x1="20" y1="10" x2="20" y2="16"/>
           <line xmlns="http://www.w3.org/2000/svg" x1="23" y1="13" x2="17" y2="13"/>
-          <circle cx="20" cy="3" r="3" fill="red" stroke="none"/>
+          <?php
+              if($pendingRequest == 1){
+              echo '<circle cx="20" cy="3" r="3" fill="red" stroke="none"/>';
+            }
+          ?>
+          
         </svg>
       </button>
       </a>
@@ -60,7 +63,6 @@
         <svg viewBox="0 0 24 24" class="h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          <circle cx="20" cy="3" r="3" fill="red" stroke="none"/>
         </svg>
       </button>
       </a>
@@ -107,7 +109,13 @@
 
     <div class="flex-grow flex overflow-x-hidden">
       <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
-        <div class="Card-Container">
+        <div id="notification-popup" class="rounded-md bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600">
+              <div class="notification-popup-content">
+                <img class="notification-profile-pic" src="" alt="User Profile Picture">
+                <span class="notification-user-name"></span> added.
+              </div>
+            </div>
+        <div class="Card-Container" id="Card-Container">
       <?php
         function getProfilePic($username) {
           $conn = mysqli_connect("db", "root", "root", "SocialNetwork");
@@ -160,7 +168,7 @@
 
             echo '<div class="friend-card bg-white rounded-md dark:bg-gray-800 shadow-lg ring-blue-500 focus:outline-none">
                     <div class="pfpImage">
-                      <img src='.$profilePic.'>
+                      <img class="profileImage" src='.$profilePic.'>
                     </div>
                     <div>
                       <h2 class="Card-Title">'.$userSent.'</h2>
@@ -189,28 +197,68 @@
 </body>
 </html>
 <script>
-  function logConfirmation() {
-  const confirmBtn = document.getElementById("confirm_friend");
-  const uid = confirmBtn.getAttribute("uid");
-  console.log("Confirm button clicked. UID:", uid);
+  if (document.querySelectorAll("#Card-Container .friend-card").length === 0) {
+    document.getElementById("Card-Container").innerHTML = "<h3>You Have No Pending Friend Requests</h3>";
+  }
 
-  const url = `confirm.php?confirm=${uid}`;
-  fetch(url, { method: "POST" })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.text();
-    })
-    .then(responseText => {
-      console.log("Confirmation response:", responseText);
-    })
-    .catch(error => {
-      console.error("Error confirming friend:", error);
-    });
+
+  function showNotification(uid) {
+    // Find the button element with the given UID
+    const button = document.querySelector(`button[uid='${uid}']`);
+    // Find the parent element of the button
+    const parent = button.closest('.friend-card');
+
+    // Extract the name and profile picture information from the parent element
+    const name = parent.querySelector('.Card-Title').innerText;
+    console.log(name)
+    const profilePic = parent.querySelector('.profileImage').src;
+    // Find the notification popup and set its contents
+    const notificationPopup = document.getElementById('notification-popup');
+    const userNameSpan = notificationPopup.querySelector('.notification-user-name');
+    userNameSpan.innerText = name;
+    const profilePicImg = notificationPopup.querySelector('.notification-profile-pic');
+    profilePicImg.src = profilePic;
+
+    parent.remove();
+    if (document.querySelectorAll("#Card-Container .friend-card").length === 0) {
+      document.getElementById("Card-Container").innerHTML = "<h3>You Have No Pending Friend Requests</h3>";
+    }
+
+    // Show the notification popup
+    notificationPopup.style.display = 'block';
+
+    // Hide the notification popup after 3 seconds
+    setTimeout(() => {
+      notificationPopup.style.display = 'none';
+    }, 3000);
 }
 
-document.getElementById("confirm_friend").addEventListener("click", logConfirmation);
+
+function logConfirmation(event) {
+    confirmBtn = event.target.closest(".accept-friend");
+    if (!confirmBtn) return; // Ignore clicks on elements that don't have the class
+    uid = confirmBtn.getAttribute("uid");
+    console.log("Confirm button clicked. UID:", uid);
+
+    const url = `confirm.php?confirm=${uid}`;
+    fetch(url, { method: "POST" })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(responseText => {
+        //console.log("Confirmation response:", responseText);
+        showNotification(uid);
+      })
+      .catch(error => {
+        console.error("Error confirming friend:", error);
+      });
+}
+
+const confirmBtns = document.querySelectorAll(".accept-friend");
+confirmBtns.forEach(btn => btn.addEventListener("click", logConfirmation));
 
 
 function logDenial() {
@@ -220,6 +268,7 @@ function logDenial() {
 }
 
 document.getElementById("deny_friend").addEventListener("click", logDenial);
+
 
 
 </script>

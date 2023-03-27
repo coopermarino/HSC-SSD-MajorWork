@@ -249,14 +249,14 @@
                   // Hide the notification popup after 3 seconds
                   setTimeout(() => {
                     notificationPopup.style.display = 'none';
-                  }, 30000);
+                  }, 3000);
                 },
                 error: function(xhr, status, error) {
                   // handle error response
+                  console.log("error")
                 }
               });
 
-              popupContainer.style.display = "none";
               codeInput.value = ""
             });
 
