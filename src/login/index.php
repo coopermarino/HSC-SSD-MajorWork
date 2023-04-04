@@ -1,5 +1,5 @@
 <?php
-   session_start();
+   include('checksession/security.php');
 ?>
 
 <!DOCTYPE html>

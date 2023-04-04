@@ -65,10 +65,36 @@ if (isset($_GET['confirm'])) {
 
   // Close the database connection
   mysqli_close($conn);
-} else {
-  // Send an error response if the confirm parameter is missing
-  header("HTTP/1.0 400 Bad Request");
-  echo "Error: confirm parameter is missing.";
 }
+if (isset($_GET['deny'])) {
+    $uid = $_GET['deny'];
+  
+    // Connect to the database
+    $host = "db";
+    $username = "root";
+    $password = "root";
+    $dbname = "SocialNetwork";
+    $conn = mysqli_connect($host, $username, $password, $dbname);
+    if (!$conn) {
+      die("Connection failed: " . mysqli_connect_error());
+    }
+  
+
+  
+    // Delete the pending request from the pendingRequests table
+    $deleteQuery = "DELETE FROM pendingRequests WHERE buttonUID='$uid'";
+    $deleteResult = mysqli_query($conn, $deleteQuery);
+    if (!$deleteResult) {
+      die("Error deleting pending request: " . mysqli_error($conn));
+    }
+  
+  
+    mysqli_close($conn);
+  }
+  else {
+    // Send an error response if the confirm parameter is missing
+    header("HTTP/1.0 400 Bad Request");
+    echo "Error: a correct parameter is missing.";
+  }
 
 ?>

@@ -30,7 +30,7 @@
   <meta charset="UTF-8">
   <title>CodePen - Dashboard UI</title>
   <link rel="stylesheet" href="./style.css">
-
+  
 </head>
 <body>
 <!-- partial:index.partial.html -->

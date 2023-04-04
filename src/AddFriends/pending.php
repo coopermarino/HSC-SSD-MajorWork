@@ -261,13 +261,31 @@ const confirmBtns = document.querySelectorAll(".accept-friend");
 confirmBtns.forEach(btn => btn.addEventListener("click", logConfirmation));
 
 
-function logDenial() {
-  const denyBtn = document.getElementById("deny_friend");
-  const uid = denyBtn.getAttribute("uid");
-  console.log("Deny button clicked. UID:", uid);
+function logDenial(event) {
+    denyBtn = event.target.closest(".deny-friend");
+    if (!denyBtn) return; // Ignore clicks on elements that don't have the class
+    uid = denyBtn.getAttribute("uid");
+    console.log("Confirm button clicked. UID:", uid);
+
+    const url = `confirm.php?deny=${uid}`;
+    fetch(url, { method: "POST" })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(responseText => {
+        //console.log("Confirmation response:", responseText);
+        showNotification(uid);
+      })
+      .catch(error => {
+        console.error("Error confirming friend:", error);
+      });
 }
 
-document.getElementById("deny_friend").addEventListener("click", logDenial);
+const denyBtns = document.querySelectorAll(".deny-friend");
+denyBtns.forEach(btn => btn.addEventListener("click", logDenial));
 
 
 

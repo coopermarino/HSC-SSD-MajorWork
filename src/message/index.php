@@ -2,6 +2,7 @@
    session_start(); 
    include('../checksession/security.php');
    require "../database/dbconfig.php";
+   require "../badges/badges.php"
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +11,6 @@
   <meta charset="UTF-8">
   <title>CodePen - Dashboard UI</title>
   <link rel="stylesheet" href="./style.css">
-
 </head>
 <body>
 <!-- partial:index.partial.html -->
@@ -48,7 +48,11 @@
           <circle xmlns="http://www.w3.org/2000/svg" cx="8.5" cy="7" r="4"/>
           <line xmlns="http://www.w3.org/2000/svg" x1="20" y1="10" x2="20" y2="16"/>
           <line xmlns="http://www.w3.org/2000/svg" x1="23" y1="13" x2="17" y2="13"/>
-          <circle cx="20" cy="3" r="3" fill="red" stroke="none"/>
+          <?php
+              if($pendingRequest == 1){
+              echo '<circle cx="20" cy="3" r="3" fill="red" stroke="none"/>';
+            }
+          ?>
         </svg>
       </button>
       </a>
@@ -106,40 +110,126 @@
           </svg>
         </div>
         <div class="space-y-4 mt-3">
-          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow">
-            <div class="flex xl flex items-center font-medium text-gray-900 dark:text-white w-full">
-              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=046c29138c1335ef8edee7daf521ba50" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
-              Lorem ipsum dolor
-            </div>
-          </button>
-          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow-lg relative ring-2 ring-blue-500 focus:outline-none">
-            <div class="flex xl:flex-row flex-col items-center font-medium text-gray-900 dark:text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
-              <img src="https://assets.codepen.io/344846/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1582611188&width=512" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
-              Lorem ipsum dolor
-            </div>
-            <div class="flex items-center w-full">
-              <div class="text-xs py-1 px-2 leading-none dark:bg-gray-900 bg-green-100 text-red-500 rounded-md">Offline</div>
-              <div class="ml-auto text-xs text-gray-500">Last Seen 10min ago</div>
-            </div>
-          </button>
-          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow">
-            <div class="flex xl:flex-row flex-col items-center font-medium text-gray-900 dark:text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
-              <img src="https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
-              Lorem ipsum dolor
-            </div>
-            <div class="flex items-center w-full">
-              <div class="text-xs py-1 px-2 leading-none dark:bg-gray-900 bg-yellow-100 text-green-500 rounded-md">Online</div>
-              <div class="ml-auto text-xs text-gray-400"></div>
-            </div>
-          </button>
+          <?php
+          // Gets the list of friends of the logged in user
+
+            // database connection information
+            $servername = "db";
+            $username = "root";
+            $password = "root";
+            $dbname = "Friends";
+
+            // create connection
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            // check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            // get the sanitized session id
+            $table_name =$_SESSION['acc_id'];
+            // prepare and execute query
+            $sql = "SELECT * FROM `$table_name` WHERE FriendID IS NOT NULL";
+            $result = $conn->query($sql);
+
+            // handle query result
+            if ($result->num_rows > 0) {
+                foreach ($result as $row) {
+
+                    // SQL to get friend name
+                    // database connection information
+                    $servername = "db";
+                    $username = "root";
+                    $password = "root";
+                    $dbname = "SocialNetwork";
+
+                     // create connection
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+
+                    // check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    $sql = "SELECT username FROM accounts WHERE id = ".$row['FriendID'];
+                    $result = $conn->query($sql);
+                    $data = mysqli_fetch_assoc($result);
+                    $username = $data['username'];
+                     
+
+
+                    //SQL To Get Profile pic
+
+                    $sql = "SELECT profilePic FROM ProfilePics WHERE id = ".$row['FriendID'];
+                    $result = $conn->query($sql);
+                    $data = mysqli_fetch_assoc($result);
+                    $profilepic = $data['profilePic'];
+
+                    echo '<a class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow" href="?user='.$username.'">
+                            <div class="flex xl flex items-center font-medium text-gray-900 dark:text-white w-full">
+                              <img src="../profilepics/'.$profilepic.'" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
+                              '.$username.'
+                            </div>
+                          </a>';
+
+
+                }
+            } else {
+                echo "No results found.";
+            }
+
+            // close connection
+            $conn->close();
+
+          ?>
         </div>
       </div>
-      <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
+
+      
+      <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto message-box-aera">
         <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 sticky top-0">
           <div class="flex w-full items-center mb-7">
             <div class="flex items-center text-3xl text-gray-900 dark:text-white">
-              <img src="https://assets.codepen.io/344846/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1582611188&width=512" class="w-12 mr-4 rounded-full" alt="profile" />
-              Lorem ipsum dolor
+            <?php
+              //sanatises to prevent XSS
+              $user = filter_input(INPUT_GET, 'user', FILTER_SANITIZE_STRING);
+              if($user==null){
+                die;
+              }
+              // SQL to get friend name
+              // database connection information
+              $servername = "db";
+              $username = "root";
+              $password = "root";
+              $dbname = "SocialNetwork";
+      
+              // create connection
+              $conn = new mysqli($servername, $username, $password, $dbname);
+      
+              // check connection
+              if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+              }
+      
+              $sql = "SELECT id FROM accounts WHERE username = '".$user."'";
+              $result = $conn->query($sql);
+              $data = mysqli_fetch_assoc($result);
+              $id = $data['id'];
+              
+      
+      
+              //SQL To Get Profile pic
+      
+              $sql = "SELECT profilePic FROM ProfilePics WHERE id = '".$id."'";
+              $result = $conn->query($sql);
+              $data = mysqli_fetch_assoc($result);
+              $profilepic = $data['profilePic'];
+
+              echo '<img src="../profilepics/'.$profilepic.'" class="w-12 mr-4 rounded-full" alt="profile" />
+                    '.$user.'';
+            ?>
+              
             </div>
             <div class="ml-auto sm:flex hidden items-center justify-end">
               <button class="w-8 h-8 ml-4 text-gray-400 shadow dark:text-gray-400 rounded-full flex items-center justify-center border border-gray-200 dark:border-gray-700">
@@ -152,7 +242,12 @@
             </div>
           </div>
         </div>
-        
+        <div class="InputTextMessage">
+          <input type="text" class="messageInput dark:bg-gray-700" name="messageInput" id="messageInput">
+          <button type="submit" class="messageSend dark:bg-gray-700 dark:text-white rounded-md flex items-center justify-center bg-blue-500" id="messageSend">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>

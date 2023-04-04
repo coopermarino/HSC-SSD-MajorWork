@@ -1137,3 +1137,43 @@ video {
 .dropdown:hover .dropdown-menu {
   display: block;
 }
+.message-box-aera{
+	position: relative;
+}
+.InputTextMessage{
+	display: flex;
+	position: absolute;
+	bottom: 10px;
+	width: 50%;
+	justify-content: center; /* centers the child horizontally */
+	align-items: center; /* centers the child vertically */
+	left: 50%; /* moves the div to the center horizontally */
+	transform: translateX(-50%); /* centers the div perfectly */
+}
+
+.messageInput{
+	width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    font-size: 1.5em;
+    text-align: center;
+}
+.messageSend{
+	display: flex;
+	justify-content: center;
+	width: 70px;
+	margin: 1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    font-size: 1.5em;
+    text-align: center;
+}
