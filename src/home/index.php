@@ -110,11 +110,7 @@
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          <div class="dropdown-menu">
-            <a href="#">Option 1</a>
-            <a href="#">Option 2</a>
-            <a href="../logout.php">Logout</a>
-          </div>
+          
         </div>
       </div>
     </div>
