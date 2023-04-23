@@ -1,5 +1,5 @@
 <?php
-
+include('../checksession/security.php');
 // Check if the confirm parameter is set
 if (isset($_GET['confirm'])) {
   $uid = $_GET['confirm'];
@@ -39,6 +39,8 @@ if (isset($_GET['confirm'])) {
   // Send a confirmation response with the userSent and userReceive values
   echo "Confirmed friend with UID: $uid";
 
+  
+  
   // Add User SQL
 
   $host = "db";
@@ -53,18 +55,46 @@ if (isset($_GET['confirm'])) {
 
   $insertQuerySent = "INSERT INTO `$userSent` (FriendID) VALUES ('$userRecieve')";
   $insertQueryRecieve = "INSERT INTO `$userRecieve` (FriendID) VALUES ('$userSent')";
-  echo $insertQueryRecieve;
   $insertResult = mysqli_query($conn, $insertQuerySent);
   $insertResult = mysqli_query($conn, $insertQueryRecieve);
   if (!$insertResult) {
     die("Error inserting friend into Friends table: " . mysqli_error($conn));
   }
+  // Close the database connection
+  mysqli_close($conn);
+
+
+
+  // ADDS Friend to user stories
+
+  $host = "db";
+  $username = "root";
+  $password = "root";
+  $dbname = "Users";
+
+  // Create database connection
+  $conn = mysqli_connect($host, $username, $password, $dbname);
+  if (!$conn) {
+      die("Connection failed: " . mysqli_connect_error());
+  }
+
+  // Sanitize user input
+  $friendId = mysqli_real_escape_string($conn, $friendId);
+  $story = mysqli_real_escape_string($conn, $story);
+  // Insert story into appropriate tables
+  $insertQuerySentStory = "INSERT INTO `{$_SESSION['acc_id']}-stories` (FriendID) VALUES ('$userSent')";
+  $insertQueryRecieveStory = "INSERT INTO `{$userSent}-stories` (FriendID) VALUES ('{$_SESSION['acc_id']}')";
+
+  $insertResultSent = mysqli_query($conn, $insertQuerySentStory);
+  $insertResultRecieve = mysqli_query($conn, $insertQueryRecieveStory);
+  if (!$insertResultSent || !$insertResultRecieve) {
+      die("Error inserting story into {$_SESSION['acc_id']}-stories table: " . mysqli_error($conn));
+  }
 
   // Close the database connection
   mysqli_close($conn);
 
-  // Close the database connection
-  mysqli_close($conn);
+
 }
 if (isset($_GET['deny'])) {
     $uid = $_GET['deny'];

@@ -34,7 +34,7 @@
 </head>
 <body>
 <!-- partial:index.partial.html -->
-<div class="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm">
+<div class="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm blur-container">
   <div class="bg-white dark:bg-gray-900 dark:border-gray-800 w-20 flex-shrink-0 border-r border-gray-200 flex-col hidden sm:flex">
     <div class="h-16 text-blue-500 flex items-center justify-center">
       <svg class="w-9" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 54 33">
@@ -91,13 +91,12 @@
   <div class="flex-grow overflow-hidden h-full flex flex-col">
     <div class="h-16 lg:flex w-full border-b border-gray-200 dark:border-gray-800 hidden px-10">
       <div class="flex h-full text-gray-600 dark:text-gray-400">
-        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Company</a>
-        <a href="#" class="cursor-pointer h-full border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white inline-flex mr-8 items-center">Users</a>
-        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Expense Centres</a>
+        <a href="#" class="cursor-pointer h-full border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white inline-flex mr-8 items-center">Home</a>
+        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Friends</a>
         <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center">Currency Exchange</a>
       </div>
       <div class="ml-auto flex items-center space-x-7">
-        <button class="h-8 px-3 rounded-md shadow text-white bg-blue-500">Upload</button>
+        <button class="h-8 px-3 rounded-md shadow text-white bg-blue-500" id="Uploadimg">Upload</button>
 
         <div class="dropdown">
           <button class="flex items-center">
@@ -118,17 +117,176 @@
       <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
         <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 sticky top-0">
           <div class="flex w-full items-center">
-            <div class="flex items-center text-3xl text-gray-900 dark:text-white">
-              <img src="https://assets.codepen.io/344846/internal/avatars/users/default.png?fit=crop&format=auto&height=512&version=1582611188&width=512" class="w-12 mr-4 rounded-full" alt="profile" />
-              Mert Cukuren
+              <div class="flex items-center text-3xl text-gray-900 dark:text-white">
+              <img src="<?php echo $_SESSION['ProfilePic'] ?>" class="w-12 mr-4 rounded-full" alt="profile" />
+              <?php
+                // Gets the list of friends of the logged in user
+
+                  // database connection information
+                  $servername = "db";
+                  $username = "root";
+                  $password = "root";
+                  $dbname = "Users";
+
+                  // create connection
+                  $conn = new mysqli($servername, $username, $password, $dbname);
+
+                  // check connection
+                  if ($conn->connect_error) {
+                      die("Connection failed: " . $conn->connect_error);
+                  }
+
+                  // get the sanitized session id
+                  $table_name =$_SESSION['acc_id'];
+                  // prepare and execute query
+                  $sql = "SELECT * FROM `{$_SESSION['acc_id']}-stories` ORDER BY `HasStory` DESC";
+                  $result = $conn->query($sql);
+
+                  // handle query result
+                  if ($result->num_rows > 0) {
+                      foreach ($result as $row) {
+
+                          // SQL to get friend name
+                          // database connection information
+                          $servername = "db";
+                          $username = "root";
+                          $password = "root";
+                          $dbname = "SocialNetwork";
+
+                          // create connection
+                          $conn = new mysqli($servername, $username, $password, $dbname);
+
+                          // check connection
+                          if ($conn->connect_error) {
+                              die("Connection failed: " . $conn->connect_error);
+                          }
+
+                          $sql = "SELECT username FROM accounts WHERE id = ".$row['FriendID'];
+                          $result = $conn->query($sql);
+                          $data = mysqli_fetch_assoc($result);
+                          $username = $data['username'];
+                          
+
+
+                          //SQL To Get Profile pic
+
+                          $sql = "SELECT profilePic FROM ProfilePics WHERE id = ".$row['FriendID'];
+                          $result = $conn->query($sql);
+                          $data = mysqli_fetch_assoc($result);
+                          $profilepic = $data['profilePic'];
+
+                          echo '<img src="../profilepics/'.$profilepic.'" class="w-12 mr-4 rounded-full" alt="profile" id='.$username.' />';
+                                
+
+
+                      }
+                  } else {
+                      echo "No results found.";
+                  }
+
+                  // close connection
+                  $conn->close();
+
+                ?>
             </div>
+            
+          
+        </div>
+        <div class="sm:p-7 p-4">
+          <div class="flex w-full items-center mb-7">
+            <select class="inline-flex mr-3 items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 bg-white dark:bg-gray-900">
+              
+              <option value="0">Last 24 Hours:</option>
+              <option value="1">Last 7 Days:</option>
+              <option value="2">Last 30 Days:</option>
+            </select>
+            <select class="inline-flex mr-3 items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 bg-white dark:bg-gray-900">
+              <option value="0">Most Recent:</option>
+              <option value="1">Oldest:</option>
+            </select>
+            <div class="ml-auto text-gray-500 text-xs sm:inline-flex hidden items-center">
+              <span class="mr-3">Page 1 of 4</span>
+              <button class="inline-flex mr-2 items-center h-8 w-8 justify-center text-gray-400 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none py-0">
+                <svg class="w-4" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button class="inline-flex items-center h-8 w-8 justify-center text-gray-400 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none py-0">
+                <svg class="w-4" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex w-full mt-5 space-x-2 justify-end">
+            <button class="inline-flex items-center h-8 w-8 justify-center text-gray-400 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none">
+              <svg class="w-4" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="inline-flex items-center h-8 w-8 justify-center text-gray-500 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none">1</button>
+            <button class="inline-flex items-center h-8 w-8 justify-center text-gray-500 rounded-md shadow border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800 dark:text-white leading-none">2</button>
+            <button class="inline-flex items-center h-8 w-8 justify-center text-gray-500 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none">3</button>
+            <button class="inline-flex items-center h-8 w-8 justify-center text-gray-500 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none">4</button>
+            <button class="inline-flex items-center h-8 w-8 justify-center text-gray-400 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none">
+              <svg class="w-4" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- partial -->
+<!-- Image Editor -->
+
+<div class="upload-box-section bg-gray-1 00 dark:bg-gray-800 dark:text-white text-gray-600" id="img-upload-popup">
+  <span class="close-btn" id="close-btn">&times</span>
+</div>
   
+
+<script>
+  let popup = document.getElementById("img-upload-popup");
+  let openBtn = document.getElementById("Uploadimg");
+  let closeBtn = document.getElementById("close-btn");
+
+  function openPopup(event) {
+    event.stopPropagation(); // Prevent the click event from propagating
+    popup.style.display = "block";
+    popup.classList.remove("popup-fade-out");
+    popup.classList.add("popup-fade-in");
+    document.addEventListener("click", closePopup);
+  }
+
+  function closePopup(event) {
+    // Check if the clicked element is not the openBtn button or the popup
+    if (!popup.contains(event.target) && event.target !== openBtn) {
+      popup.classList.remove("popup-fade-in");
+      popup.classList.add("popup-fade-out");
+      document.removeEventListener("click", closePopup);
+      // Wait for the animation to end before hiding the popup
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 200);
+    }
+  }
+
+  openBtn.addEventListener("click", openPopup);
+  closeBtn.addEventListener("click", function(event) {
+    event.stopPropagation(); // Prevent the click event from propagating
+    popup.classList.remove("popup-fade-in");
+    popup.classList.add("popup-fade-out");
+    document.removeEventListener("click", closePopup);
+    // Wait for the animation to end before hiding the popup
+    setTimeout(() => {
+      popup.style.display = "none";
+    }, 200);
+  });
+
+
+</script>
+
 </body>
 </html>

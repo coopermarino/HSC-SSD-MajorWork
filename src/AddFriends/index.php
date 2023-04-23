@@ -273,7 +273,8 @@
     </div>
   </div>
 </div>
-<!-- partial -->
-  
+<!-- Image Upload -->
+
+
 </body>
 </html>
