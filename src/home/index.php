@@ -93,7 +93,7 @@
       <div class="flex h-full text-gray-600 dark:text-gray-400">
         <a href="#" class="cursor-pointer h-full border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white inline-flex mr-8 items-center">Home</a>
         <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Friends</a>
-        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center">Currency Exchange</a>
+
       </div>
       <div class="ml-auto flex items-center space-x-7">
         <button class="h-8 px-3 rounded-md shadow text-white bg-blue-500" id="Uploadimg">Upload</button>
@@ -117,8 +117,8 @@
       <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
         <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 sticky top-0">
           <div class="flex w-full items-center">
-              <div class="flex items-center text-3xl text-gray-900 dark:text-white">
-              <img src="<?php echo $_SESSION['ProfilePic'] ?>" class="w-12 mr-4 rounded-full" alt="profile" />
+              <div class="flex items-center text-3xl text-gray-900 dark:text-white story-icon-container">
+              
               <?php
                 // Gets the list of friends of the logged in user
 
@@ -175,9 +175,14 @@
                           $data = mysqli_fetch_assoc($result);
                           $profilepic = $data['profilePic'];
 
-                          echo '<img src="../profilepics/'.$profilepic.'" class="w-12 mr-4 rounded-full" alt="profile" id='.$username.' />';
-                                
-
+                          echo '<div class="StoryProfileIcon">
+                                  <button class="story-button">
+                                    <img src="../profilepics/'.$profilepic.'" class="w-20 mr-4 rounded-full flex justify-center image-center Story-image-unseen-story" alt="profile" id="<?php echo $username; ?>" />
+                                  </button>
+                                  <p class="flex text-sm justify-center">'.$username.'</p>
+                                </div>  
+                                                      
+                                ';                                
 
                       }
                   } else {
