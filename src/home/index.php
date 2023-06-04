@@ -1,26 +1,24 @@
 <?php
-   session_start(); 
-   include('../checksession/security.php');
-   require "../database/dbconfig.php";
-   require "../database/createusertables.php";
-   require "../badges/badges.php"
+session_start();
+include "../checksession/security.php";
+require "../database/dbconfig.php";
+require "../database/createusertables.php";
+require "../badges/badges.php";
 ?>
 <?php
-	function getProfilePic($username) {
-		$conn = mysqli_connect("db", "root", "root", "SocialNetwork");
-		$query = "SELECT profilePic FROM ProfilePics WHERE id = '$username'";
-		$result = mysqli_query($conn, $query);
-		$row = mysqli_fetch_assoc($result);
-		mysqli_close($conn);
-		return $row['profilePic'];
-	}
-  
-	$username = $_SESSION['acc_id'];
-	$pfp = getProfilePic($username);
-	//$_SESSION['ProfilePic'] = $profilePic;
-  $profilePic = "../profilePics/{$pfp}";
-  $_SESSION['ProfilePic'] = $profilePic;
-
+function getProfilePic($username)
+{
+    $conn = mysqli_connect("db", "root", "root", "SocialNetwork");
+    $query = "SELECT profilePic FROM ProfilePics WHERE id = '$username'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    mysqli_close($conn);
+    return $row["profilePic"];
+}
+$username = $_SESSION["acc_id"];
+$pfp = getProfilePic($username); //$_SESSION['ProfilePic'] = $profilePic;
+$profilePic = "../profilePics/{$pfp}";
+$_SESSION["ProfilePic"] = $profilePic;
 ?>
 
 
@@ -45,7 +43,7 @@
 
     <div class="flex mx-auto flex-grow mt-4 flex-col text-gray-400 space-y-4">
       <a href="../home/">
-        <button class="h-10 w-12 dark:bg-gray-700 dark:text-white rounded-md flex items-center justify-center bg-blue-100 text-blue-500">
+        <button class="h-10 w-12 dark:bg-gray-700  rounded-md flex items-center justify-center bg-blue-100 text-blue-500">
           <svg viewBox="0 0 24 24" class="h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -68,11 +66,9 @@
           <circle xmlns="http://www.w3.org/2000/svg" cx="8.5" cy="7" r="4"/>
           <line xmlns="http://www.w3.org/2000/svg" x1="20" y1="10" x2="20" y2="16"/>
           <line xmlns="http://www.w3.org/2000/svg" x1="23" y1="13" x2="17" y2="13"/>
-          <?php
-            if($pendingRequest == 1){
+          <?php if ($pendingRequest == 1) {
               echo '<circle cx="20" cy="3" r="3" fill="red" stroke="none"/>';
-            }
-          ?>
+          } ?>
         </svg>
       </button>
       </a>
@@ -101,10 +97,16 @@
         <div class="dropdown">
           <button class="flex items-center">
             <span class="relative flex-shrink-0">
-              <img class="w-7 h-7 rounded-full" src="<?php echo $_SESSION['ProfilePic'] ?>" alt="profile" />
+              <img class="w-7 h-7 rounded-full" src="<?php echo $_SESSION[
+                  "ProfilePic"
+              ]; ?>" alt="profile" />
               <span class="absolute right-0 -mb-0.5 bottom-0 w-2 h-2 rounded-full bg-green-500 border border-white dark:border-gray-900"></span>
             </span>
-            <span class="ml-2"><?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="ml-2"><?php echo htmlspecialchars(
+                $_SESSION["username"],
+                ENT_QUOTES,
+                "UTF-8"
+            ); ?></span>
             <svg viewBox="0 0 24 24" class="w-4 ml-1 flex-shrink-0" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -119,80 +121,75 @@
           <div class="flex w-full items-center">
               <div class="flex items-center text-3xl text-gray-900 dark:text-white story-icon-container">
               
-              <?php
-                // Gets the list of friends of the logged in user
-
-                  // database connection information
-                  $servername = "db";
-                  $username = "root";
-                  $password = "root";
-                  $dbname = "Users";
-
-                  // create connection
-                  $conn = new mysqli($servername, $username, $password, $dbname);
-
-                  // check connection
-                  if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                  }
-
-                  // get the sanitized session id
-                  $table_name =$_SESSION['acc_id'];
-                  // prepare and execute query
-                  $sql = "SELECT * FROM `{$_SESSION['acc_id']}-stories` ORDER BY `HasStory` DESC";
-                  $result = $conn->query($sql);
-
-                  // handle query result
-                  if ($result->num_rows > 0) {
-                      foreach ($result as $row) {
-
-                          // SQL to get friend name
-                          // database connection information
-                          $servername = "db";
-                          $username = "root";
-                          $password = "root";
-                          $dbname = "SocialNetwork";
-
-                          // create connection
-                          $conn = new mysqli($servername, $username, $password, $dbname);
-
-                          // check connection
-                          if ($conn->connect_error) {
-                              die("Connection failed: " . $conn->connect_error);
-                          }
-
-                          $sql = "SELECT username FROM accounts WHERE id = ".$row['FriendID'];
-                          $result = $conn->query($sql);
-                          $data = mysqli_fetch_assoc($result);
-                          $username = $data['username'];
-                          
+              <?php // Gets the list of friends of the logged in user // database connection information
 
 
-                          //SQL To Get Profile pic
-
-                          $sql = "SELECT profilePic FROM ProfilePics WHERE id = ".$row['FriendID'];
-                          $result = $conn->query($sql);
-                          $data = mysqli_fetch_assoc($result);
-                          $profilepic = $data['profilePic'];
-
-                          echo '<div class="StoryProfileIcon">
-                                  <button class="story-button">
-                                    <img src="../profilepics/'.$profilepic.'" class="w-20 mr-4 rounded-full flex justify-center image-center Story-image-unseen-story" alt="profile" id="<?php echo $username; ?>" />
-                                  </button>
-                                  <p class="flex text-sm justify-center">'.$username.'</p>
-                                </div>  
-                                                      
-                                ';                                
-
+              $servername = "db";
+              $username = "root";
+              $password = "root";
+              $dbname = "Users";
+              // create connection
+              $conn = new mysqli($servername, $username, $password, $dbname);
+              // check connection
+              if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+              } // get the sanitized session id
+              $table_name = $_SESSION["acc_id"];
+              // prepare and execute query
+              $sql = "SELECT * FROM `{$_SESSION["acc_id"]}-stories` ORDER BY `HasStory` DESC";
+              $result = $conn->query($sql);
+              // handle query result
+              if ($result->num_rows > 0) {
+                  foreach ($result as $row) {
+                      // SQL to get friend name
+                      // database connection information
+                      $servername = "db";
+                      $username = "root";
+                      $password = "root";
+                      $dbname = "SocialNetwork";
+                      // create connection
+                      $conn = new mysqli(
+                          $servername,
+                          $username,
+                          $password,
+                          $dbname
+                      );
+                      // check connection
+                      if ($conn->connect_error) {
+                          die("Connection failed: " . $conn->connect_error);
                       }
-                  } else {
-                      echo "No results found.";
+                      $sql =
+                          "SELECT username FROM accounts WHERE id = " .
+                          $row["FriendID"];
+                      $result = $conn->query($sql);
+                      $data = mysqli_fetch_assoc($result);
+                      $username = $data["username"];
+
+                      //SQL To Get Profile pic
+                      $sql =
+                          "SELECT profilePic FROM ProfilePics WHERE id = " .
+                          $row["FriendID"];
+                      $result = $conn->query($sql);
+                      $data = mysqli_fetch_assoc($result);
+                      $profilepic = $data["profilePic"];
+                      echo '<div class="story-image-container"> 
+                                  <div class="img-circle">
+                                    <img src="/profilepics/' .
+                          $profilepic .
+                          '" alt="" class="border-white-image-border dark:border-dark-image-border">
+                                  </div>  
+                                  <p class="flex text-sm justify-center">' .
+                          $username .
+                          '</p>
+                                </div>                      
+                                ';
                   }
-
-                  // close connection
-                  $conn->close();
-
-                ?>
+              } else {
+                  echo "Add Friends For Stories to Show";
+              }
+              // close connection
+              $conn->close();
+              ?>
             </div>
             
           
@@ -247,10 +244,126 @@
 </div>
 <!-- Image Editor -->
 
-<div class="upload-box-section bg-gray-1 00 dark:bg-gray-800 dark:text-white text-gray-600" id="img-upload-popup">
+<div class="upload-box-section bg-gray-300 dark:bg-gray-800 dark:text-white text-gray-600" id="img-upload-popup">
   <span class="close-btn" id="close-btn">&times</span>
+
+  <div class="Post-container">
+    <h4 class="dark:text-white text-gray-600 upload-table">Add New Post</h4>
+      <hr class="title-line dark:title-line">
+      <form class="upload-form" action="" method="post" id="form" enctype="multipart/form-data">
+
+        <h3 class="text-blue-500 dark:text-white">Post Title:</h3>
+        <input type="text" class="form-control rounded-md bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600" id="title" name="title">
+
+
+       <h3 class="text-blue-500 dark:text-white">Description</h3>
+        <textarea type="text" class="form-control form-text-area" id="description" name="description" rows="5"></textarea>
+
+      
+              <h3 class="text-blue-500 dark:text-white">Upload Photos</h3>
+              <div class="uploader-container dark:uploader-container-dark">
+                  <input type="file" id="photo" class="imageinputnone" accept="image/jpeg,image/png" name="photo[]" multiple>
+                  <div class="uploader">
+                      <div class="uploader-btn dark:uploader-btn">
+                      <svg width="30px" height="30px" viewBox="0 0 1024.00 1024.00" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M621.7 365.8V439h219.5v365.7H182.9V439h219.4v-73.2H109.7v512h804.6v-512z" fill="#a1a1aa"></path><path d="M475.4 280.4v341.4h73.2V280.4l47.3 47.2 51.7-51.7L512 140.4 376.4 275.9l51.8 51.7z" fill="#a1a1aa"></path></g></svg>
+                      </div>
+                      <div class="photo-show flex-grow-1"></div>
+                  </div>
+              </div>
+              <div class="Upload_btn_wrapper">
+                <button class="upload-btn h-8 px-3 rounded-md shadow text-white bg-blue-500"><i class="fa fa-upload"></i>Upload</button>
+              </div>
+          </div>
+          
+      </form>
+    </div>
 </div>
-  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+
+<script>
+//to save upload file
+    let store = [];
+
+    //delete temp uploaded photo
+    function del(x) {
+        store.splice(x,1);
+        showPhoto();
+    }
+
+    //to show file upload
+    $(".uploader-btn").click(function () {
+        $("#photo").click();
+    });
+
+    //show photo list
+    function showPhoto(){
+        let output = $(".photo-show");
+        output.empty();
+
+       for(let x in store){
+            let reader = new FileReader();
+            reader.onload = function(){
+                let dataURL = reader.result;
+               output.append(`
+               <div class="photo-to-upload">
+                <img class="temp-photo" src="${dataURL}" >
+                <button class="btn btn-danger btn-sm position-absolute" onclick="del(${x})" style="bottom: 5px;right: 5px">
+                    <i class="fa fa-trash"></i>
+                </button>
+               </div>
+               `);
+            };
+            reader.readAsDataURL(store[x]);
+        }
+    }
+
+    //add store record
+    $("#photo").on("change",function (e) {
+        let file = e.target.files;
+        for(let x in file){
+            if(x != "length" && x < file.length){
+                store.push(file[x]);
+            }
+        }
+        showPhoto();
+    });
+
+    //upload form
+    $("#form").on("submit",function (e) {
+        e.preventDefault();
+        let upload = $(".upload");
+        let uploadBtnData = upload.html();
+        upload.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...`);
+        let form =$(this)[0];
+        let formData = new FormData(form);
+        let to = $(this).attr("action");
+
+        store.map(function (el) {
+            formData.append("store[]",el,el.name);
+        });
+
+        formData.delete("photo[]");
+
+        $.ajax({
+            method:"post",
+            url:to,
+            data:formData,
+            contentType:false,
+            processData: false,
+            success:function (data) {
+                let result = JSON.parse(data);
+                console.log(result);
+                if(result.status == 200){
+                    $("input,textarea").val("");
+                    store = [];
+                    showPhoto();
+                    upload.html(uploadBtnData);
+                }
+            }
+        });
+
+    });
+</script>
 
 <script>
   let popup = document.getElementById("img-upload-popup");
