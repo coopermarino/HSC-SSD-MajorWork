@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-if(!$_SESSION['username'])
-{
-    echo "no session";
-    header('Location:../login/');
+if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
+    header('Location: ../login/');
 }
 ?>

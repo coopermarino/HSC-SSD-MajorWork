@@ -1,7 +1,6 @@
-<?php
-   include('checksession/security.php');
+<?
+	session_start();
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
