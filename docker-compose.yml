@@ -7,9 +7,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80:80
-      - 443:443
+      - 443:443  # Expose HTTPS port
     volumes:
       - ./src:/var/www/html/
+      - ./apache/ssl:/etc/apache2/ssl  # Mount SSL certificate files
 
   db:
     image: mysql
@@ -18,14 +19,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-        - mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
-    
 
 volumes:
   mysql-data:

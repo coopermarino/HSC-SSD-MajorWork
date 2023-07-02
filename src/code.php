@@ -40,7 +40,6 @@ if(isset($_POST['login_btn']))
    }
 }
 
-
 // Create New Account
 if(isset($_POST['register'])){
     $username = $_POST['username'];
@@ -83,7 +82,15 @@ if(isset($_POST['register'])){
             if($result){
                 $newAccountId = mysqli_insert_id($connect);
 
-                //Insert information into ProfilePics Table
+                // Insert the public key into the database
+                $publicKey = json_decode($_POST['publicKey'], true);
+                $publicKeyJwk = json_encode($publicKey);
+                $query = "UPDATE accounts SET public_key=? WHERE id=?";
+                $stmt = mysqli_prepare($connect, $query);
+                mysqli_stmt_bind_param($stmt, "si", $publicKeyJwk, $newAccountId);
+                mysqli_stmt_execute($stmt);
+
+                // Insert information into ProfilePics Table
                 $mysqli = new mysqli("db", "root", "root", "SocialNetwork");
 
                 // Check for connection errors
