@@ -265,7 +265,7 @@ $_SESSION["ProfilePic"] = $profilePic;
                   <input type="file" id="photo" class="imageinputnone" accept="image/jpeg,image/png" name="photo[]" multiple>
                   <div class="uploader">
                       <div class="uploader-btn dark:uploader-btn">
-                      <svg width="30px" height="30px" viewBox="0 0 1024.00 1024.00" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M621.7 365.8V439h219.5v365.7H182.9V439h219.4v-73.2H109.7v512h804.6v-512z" fill="#a1a1aa"></path><path d="M475.4 280.4v341.4h73.2V280.4l47.3 47.2 51.7-51.7L512 140.4 376.4 275.9l51.8 51.7z" fill="#a1a1aa"></path></g></svg>
+                        <svg width="30px" height="30px" viewBox="0 0 1024.00 1024.00" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#a1a1aa"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M621.7 365.8V439h219.5v365.7H182.9V439h219.4v-73.2H109.7v512h804.6v-512z" fill="#a1a1aa"></path><path d="M475.4 280.4v341.4h73.2V280.4l47.3 47.2 51.7-51.7L512 140.4 376.4 275.9l51.8 51.7z" fill="#a1a1aa"></path></g></svg>
                       </div>
                       <div class="photo-show flex-grow-1"></div>
                   </div>
