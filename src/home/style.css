@@ -241,6 +241,14 @@ object {
 	vertical-align: middle
 }
 
+.lg\:block {
+	display: block
+}
+
+.lg\:flex {
+	display: flex
+}
+
 img,
 video {
 	max-width: 100%;
@@ -1033,7 +1041,7 @@ video {
 	}
 }
 
-@media(min-width:640px) {
+@media(min-width:320px) {
 	.sm\:block {
 		display: block
 	}
@@ -1076,16 +1084,6 @@ video {
 @media(min-width:768px) {
 	.md\:table-cell {
 		display: table-cell
-	}
-}
-
-@media(min-width:1024px) {
-	.lg\:block {
-		display: block
-	}
-
-	.lg\:flex {
-		display: flex
 	}
 }
 
