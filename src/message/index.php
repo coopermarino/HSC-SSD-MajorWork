@@ -83,7 +83,7 @@
         <div class="dropdown">
           <button class="flex items-center">
             <span class="relative flex-shrink-0">
-              <img class="w-7 h-7 rounded-full" src="../profilePics/<?php echo $_SESSION['ProfilePic'] ?>" alt="profile" />
+              <img class="w-7 h-7 rounded-full" src="../profilepics/<?php echo $_SESSION['ProfilePic'] ?>" alt="profile" />
               <span class="absolute right-0 -mb-0.5 bottom-0 w-2 h-2 rounded-full bg-green-500 border border-white dark:border-gray-900"></span>
             </span>
             <span class="ml-2"><?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?></span>

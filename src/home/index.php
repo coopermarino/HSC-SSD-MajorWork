@@ -17,7 +17,7 @@ function getProfilePic($username)
 }
 $username = $_SESSION["acc_id"];
 $pfp = getProfilePic($username); //$_SESSION['ProfilePic'] = $profilePic;
-$profilePic = "../profilePics/{$pfp}";
+$profilePic = "../profilepics/{$pfp}";
 $_SESSION["ProfilePic"] = $profilePic;
 ?>
 
