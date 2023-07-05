@@ -1,10 +1,2 @@
 .DS_Store
-mysql/#ib_16384_0.dblwr
-mysql/binlog.000011
-mysql/ibdata1
-mysql/mysql.ibd
-mysql/undo_001
-mysql/undo_002
-mysql/#innodb_redo/#ib_redo9
-mysql/#innodb_redo/#ib_redo10
-mysql/#innodb_redo/#ib_redo10_tmp
+mysql
